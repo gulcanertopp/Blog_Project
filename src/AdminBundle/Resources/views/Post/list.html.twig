@@ -1,0 +1,95 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+    <div class="alert alert-success" style="display: none">
+        <strong>Eklendi!</strong>
+    </div>
+    <div class="alert alert-danger" style="display: none">
+        <strong>Ekleme Hatası!</strong>
+    </div>
+
+
+    <form id="category-add-form" class="list-post-form">
+        <fieldset>
+            <legend>List Post</legend>
+
+            <label class="sel-cat" for="sel1">Select Category :    &nbsp; </label>
+
+
+                <select class="post-list-cat select2-multiple" size="3" multiple="multiple">
+                    <option value="Tec">Technology</option>
+                    <option value="Mus">Music</option>
+                    <option value="Cin">Cinema</option>
+                    <option value="Sec">Security</option>
+                </select>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('.select2-multiple').select2();
+                        $('select').select2({
+                            placeholder: 'All Categories'
+                        });
+                    });
+                </script>
+
+
+        <table class="table table-striped">
+
+
+            <tbody>
+            <tr>
+
+                    <div class="col-lg-12 post-list-headline">
+                        <div class="col-lg-2"><strong>Profile Picture</strong></div>
+                        <div class="col-lg-2"><strong>Name</strong> </div>
+                        <div class="col-lg-1"><strong>Writer</strong></div>
+                        <div class="col-lg-2"><strong>Begin Date</strong></div>
+                        <div class="col-lg-2"><strong>End Date</strong></div>
+                        <div class="col-lg-2"><strong>Category</strong></div>
+                        <div class="col-lg-1"></div>
+
+                    </div>
+
+            </tr>
+
+    {% for post  in posts.Content %}
+            <tr>
+                <td>
+                    <div class="col-lg-12 post-list-content">
+                        <div class="col-lg-2 post-list-profile" style="background: url('{{ post.ImageUrl}}')"></div>
+                        <div class="col-lg-2">{{ post.Title }}</div>
+                        <div class="col-lg-1">{{ post.UserId }}</div>
+                        <div class="col-lg-2">{{ post.BeginDate }}</div>
+                        <div class="col-lg-2">{{ post.EndDate }}</div>
+                        <div class="col-lg-2">
+                            {% for category in post.Categories %} 
+                                {{ category.CategoryName }}
+                            {% endfor %}
+
+                        </div>
+                        <div class="col-lg-1 edit-del-buttons">
+                            <button type="button" class=" btn btn-primary glyphicon glyphicon-edit ebutton" title="Edit"></button>
+                            <button type="button" class="btn btn-danger glyphicon glyphicon-remove dbutton" title="Delete"></button>
+
+
+
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+    {% endfor %}
+            </tbody>
+
+        </table>
+        </fieldset>
+
+        <div class="pagenumbers">
+            {% for i in 1..(posts.ListSize / 3)|round(0, 'ceil') %}
+                <a href='{{ url("index_admin_list_post",{ 'page' :i-1 }) }}'> {{ i }} </a>
+            {% endfor %}
+
+        </div>
+    </form>
+
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+    <div class="alert alert-success" style="display: none">
+        <strong>Eklendi!</strong>
+    </div>
+    <div class="alert alert-danger" style="display: none">
+        <strong>Ekleme Hatası!</strong>
+    </div>
+
+    <form id="category-update-form" class="login-form button-style" method="post">
+        <br>
+        <table class="table table-striped">
+            <thead><tr><th>
+                    Category Edit
+
+                </th></tr></thead>
+            <tbody>
+            <tr>{% if (category) %}
+                <td> <input name="category_name" type="text"  id="categoryname"  value="{{ category.CategoryName }}"  onfocus="if(this.beenchanged!=true){ this.value = ''}" onblur="if(this.beenchanged!=true) { this.value='categoryname' }" onchange="this.beenchanged = true;" /><br></td>
+                     <input type="hidden" name="ID" value="{{ category.CategoryId }}">
+                {% endif %}
+            </tr>
+
+            </tbody>
+
+        </table>
+        <button>Update Category</button>
+
+    </form>
+
+{% endblock %}

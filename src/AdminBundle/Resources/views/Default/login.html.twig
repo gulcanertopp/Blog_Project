@@ -1,0 +1,51 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block login %}
+
+    <div class="login-page">
+        <div class="form">
+            <form id="login-form" class="login-form" method="post">
+                <input name="username" type="text" placeholder="username"/>
+                <input name="password" type="password" placeholder="password"/>
+                <button>login</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="blog-add">
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+        var Forms={
+            Add:{
+                Self: $('#login-form'),
+                Field:{
+                    Username:$('#login-form input[name ="username"]'),
+                    Password:$('#login-form input[name ="password"]')
+                },
+                Bind:function () {
+                    Forms.Add.Self.on('submit',function (e) {
+                        e.preventDefault();
+                        $.post('{{ url('ajax_login') }}',$(this).serialize(),function (result) {
+                            if(result.success)
+                            {
+                                location.href="/admin";
+                            }else{
+                                alert("Kullanıcı Girişi Hatalı");
+                            }
+                        })
+                    })
+                }
+            },
+            Bind:function () {
+                Forms.Add.Bind();
+
+            }
+        };
+        $(document).ready(function () {
+            Forms.Bind();
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Panel!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="{{ asset('static//js/tinymce/tinymce.min.js') }}"></script>
+    <link href="{{ asset('static//css/admin.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('static//css/bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+{% block login %}
+{% endblock %}
+<div class="heading">
+{% if app.session.get('name') != null %}
+    <div class="welcome">
+Hoşgeldin {{ app.session.get('name') }} <a href="{{ url("logout") }}">Çıkış yap</a>
+    </div>
+</div>
+
+    <div class="col-lg-12 col-sm-12 main" xmlns="http://www.w3.org/1999/html">
+            <div class="col-lg-2 col-sm-2 category nopadding">
+                <div class="col-lg-12 bannerFirst nopadding" >
+                    <div class="logo-myblog" id="logo">
+                        <img src="{{ asset('static//img/logo.png') }}">
+
+
+
+                    </div>
+
+            </div>
+
+            <ul id="menu">
+
+                <li class="{% if ( app.request.pathInfo() == path("admin"))%}menuhover{% endif %}" href="{{ path("admin") }}">
+                     <a class="{% if ( app.request.pathInfo() == path("admin"))%}active{% endif %}" href="{{ path("admin") }}"> <span class="glyphicon glyphicon-home"></span>&nbsp; Start</a>
+                   </li>
+
+                <li class="{% if ( app.request.pathInfo() == path("index_admin_save_category") or app.request.pathInfo() == path("index_admin_list_category") )%}menuhover{% endif %}"><a href="#"><span class="glyphicon glyphicon-th"></span>&nbsp;Category</a>
+
+                    <ul style="display: none;">
+                        <a class="{% if ( app.request.pathInfo() == path("index_admin_save_category"))%}active{% endif %}"  href="{{ path("index_admin_save_category") }}"> <li> <span class="glyphicon glyphicon-plus"></span>&nbsp; <strong> Add Category </strong> </li> </a>
+
+                        <a class="{% if ( app.request.pathInfo() == path("index_admin_list_category"))%}active{% endif %}"  href="{{ path("index_admin_list_category",{'page':0,'limit':5})}}"><li> <span class="glyphicon glyphicon-th-list"></span>&nbsp;<strong> List Category </strong> </li> </a>
+
+                    </ul></li>
+                <li class="{% if ( app.request.pathInfo() == path("index_admin_add_post") or app.request.pathInfo() == path("index_admin_list_post") )%}menuhover{% endif %}" ><a href="#"><span class="glyphicon glyphicon-paperclip"></span>&nbsp;Post</a>
+
+                    <ul style="display: none;">
+
+                        <a class="{% if ( app.request.pathInfo() == path("index_admin_add_post"))%}active{% endif %}" href="{{ path("index_admin_add_post")}}"> <li><strong>Add Post </strong></li></a>
+
+                        <a class="{% if ( app.request.pathInfo() == path("index_admin_list_post"))%}active{% endif %}" href="{{ path("index_admin_list_post")}}"> <li><strong>List Post</strong></li></a>
+
+
+                    </ul>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-lg-10 col-sm-10 content nopadding">
+            <div class="col-lg-12 bannerSecond nopadding">
+                <div class="box">
+                    <div class="container-1">
+
+                        <span class="icon"><i class="fa fa-search"></i></span>
+                        <input type="search" id="search" placeholder="Search..." />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-11 main-content">
+                {% block content %}
+
+                {% endblock %}
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+{% endif %}
+
+{% block javascripts %}
+
+{% endblock %}
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+        $('#menu ul').hide();
+
+        $('#menu > li').click( function() {
+
+            $(this).find('ul').slideToggle("slow");
+
+        });
+        $(".menuhover").trigger('click');
+    });
+</script>
+
+
+</body>
+</html>

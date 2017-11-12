@@ -1,0 +1,58 @@
+services:
+#    admin.example:
+#        class: AppBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+    kernel.listener.controller_listener:
+        class:  AppBundle\EventListener\ControllerListener
+        arguments:
+            userRepository:  "@app.user_repository"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onHandleController }
+
+    kernel.listener.exception_listener:
+        class: AppBundle\EventListener\ExceptionListener
+        arguments: ["@twig", "@logger"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    app.user_repository:
+        class: AppBundle\Data\Repository\UserRepository
+        parent: app.base_repository
+
+    app.category_repository:
+        class: AppBundle\Data\Repository\CategoryRepository
+        parent: app.base_repository
+
+    app.post_repository:
+        class: AppBundle\Data\Repository\PostRepository
+        parent: app.base_repository
+
+    app.base_repository:
+        class: AppBundle\Data\Repository\BaseRepository
+        calls:
+            - [Initialize , ["@doctrine.dbal.default_connection"]]
+            - [SetLogger , ["@logger"]]
+
+    app.generichelper:
+        class: AppBundle\Domain\Helper\GenericHelper
+        arguments: ["@service_container"]
+
+    app.base_controller:
+        class: AppBundle\Controller\BaseController
+        abstract: true
+        calls:
+            - [ Initialize, ["@session"] ]
+
+    app.category_controller:
+        class: AppBundle\Controller\CategoryController
+        arguments: ["@app.category_repository"]
+        parent: app.base_controller
+
+    app.post_controller:
+        class: AppBundle\Controller\PostController
+        arguments: ["@app.post_repository"]
+        parent: app.base_controller
+
+    app.default_controller:
+      class: AppBundle\Controller\DefaultController
+      arguments: ["@app.post_repository","@app.category_repository"]
+      parent: app.base_controller

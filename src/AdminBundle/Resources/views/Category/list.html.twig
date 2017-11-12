@@ -1,0 +1,57 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+
+    <form id="category-list-form" class="login-form button-style" method="post">
+        <fieldset>
+            <legend>List Category</legend></fieldset>
+    <div class="alert alert-success" style="display: none">
+        <strong>Deleted!</strong>
+    </div>
+
+    <div class="alert alert-danger" style="display: none"><strong>No Deleted!</strong></div>
+
+    <table class="table table-striped list-cat">
+
+        <tbody>
+        {% for cat in categories.Content %}
+        <tr>
+            <td>{{ cat.CategoryName }}<button type="button" data-id="{{ cat.CategoryId }}"
+                                              class="btn btn-danger delete-cat">Delete</button>
+                <button type="button" onclick="location.href='{{ url("index_admin_get_category",{ 'categoryId' :cat.CategoryId}) }}';"
+                        class="edit btn btn-primary">Edit</button></td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+<div class="pagenumbers">
+    {% for i in 1..(categories.ListSize / 5)|round(0, 'ceil') %}
+        <a href='{{ url("index_admin_list_category",{ 'page' :i-1 }) }}'> {{ i }} </a>
+    {% endfor %}
+
+</div>
+    </form>
+   <input id="listSize" type="hidden" value="{{ categories.ListSize }}">
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).on('click','.delete-cat',function () {
+            var categoryId= $(this).data('id');
+            $.post('{{ url('index_admin_delete_category') }}' , {
+                ID:categoryId
+            }, function (result) {
+                if(result){
+                    location.reload();
+                    $('.alert-success').slideDown();
+
+                }else{
+                    $('.alert-danger').slideDown();
+                }
+
+            });
+        });
+
+    </script>
+{% endblock %}

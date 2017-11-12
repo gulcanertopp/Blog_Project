@@ -1,0 +1,82 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+
+
+
+
+      <div class=" col-lg-12container welcome-content">
+                <h2 class="welcome-heading">Welcome!</h2>
+                <div class="well">
+                    <p class="welcome-first-row">We've put together a few links to get you started</p>
+
+              </div>
+          <div class=" col-lg-6 ">
+
+              <h2 class="welcome-heading">Currently</h2>
+              <div class="col-lg-12 panel panel-default">
+                  <div class="col-lg-6 panel-body pd-body1">Content
+                      <ul>
+                          <li><span class="move_counter">1</span>Text </li>
+                          <li><span class="move_counter">2</span>Page </li>
+                          <li><span class="move_counter">3</span>Category </li>
+
+                      </ul>
+
+
+
+                  </div>
+                  <div class="col-lg-6 panel-body pd-body2">Comment
+                      <ul>
+                          <li><span class="move_counter">1</span>Comment </li>
+                          <li><span class="move_counter">2</span>Approved </li>
+                          <li><span class="move_counter">3</span>Expectant </li>
+                          <li><span class="move_counter">4</span>Refuse </li>
+
+                      </ul>
+             </div>
+
+              </div>
+          </div>
+
+          <div class=" col-lg-6 ">
+
+              <h2 class="welcome-heading">Quick Press</h2>
+              <div class="panel panel-default">
+                  <div class="panel-body">
+                      <input name="header-input" type="text" placeholder="Enter a header"/>
+
+                      <input class="add-enviroment" type="file" name="add-enviroment" id="add-enviroment">
+
+                      <textarea class="quick-textarea">
+                      </textarea>
+                      <button class="quick  btn btn-default" type="button">Save as draft</button>
+                      <button class="quick  btn btn-default" type="button">Reset</button>
+
+                      <button id="quick" class="btn btn-primary " type="submit" data-toggle="modal" data-target="#myModal">Published</button>
+
+                      <div class="modal fade" id="myModal" role="dialog">
+                          <div class="modal-dialog">
+
+
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                                  </div>
+                                  <div class="modal-body">
+                                    Your Post published succesfully!
+                                  </div>
+                                  <div class="modal-footer">
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+                  </div>
+              </div>
+          </div>
+
+
+
+{% endblock %}

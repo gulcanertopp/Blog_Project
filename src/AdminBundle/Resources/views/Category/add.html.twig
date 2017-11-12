@@ -1,0 +1,84 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+<form id="category-add-form" class="login-form button-style" method="post">
+
+    <table class="table table-striped">
+        <fieldset>
+            <legend>Add Category</legend></fieldset>
+        <tbody>
+
+        <tr>
+            <td>
+                {% if (category) %}
+                    <input name="category_name" type="text" id="categoryname"  value="{{ category.CategoryName }}"  onfocus="if(this.beenchanged!=true){ this.value = ''}" onblur="if(this.beenchanged!=true) { this.value='categoryname' }" onchange="this.beenchanged = true;" />
+                    <input name="category_description" type="text" id="categoryname"  value="{{ category.CategoryName }}"  onfocus="if(this.beenchanged!=true){ this.value = ''}" onblur="if(this.beenchanged!=true) { this.value='categoryname' }" onchange="this.beenchanged = true;" />
+                    <input type="hidden" name="ID" value="{{ category.CategoryId }}">
+                    <button id="add-cat" class="btn btn-primary " type="submit" data-toggle="modal" data-target="#myModal">Update Category</button>
+                {% else %}
+
+                    <input name="category_name" type="text" id="categoryname"   placeholder="categoryname" onfocus="if(this.beenchanged!=true){ this.value = ''}" onblur="if(this.beenchanged!=true) { this.value='categoryname' }" onchange="this.beenchanged = true;" />
+                    <input type="hidden" name="ID" value="null">
+                    <button id="add-cat" class="btn btn-primary " type="submit" data-toggle="modal" data-target="#myModal">Add Category</button>
+            {% endif %}
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+
+
+</form>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Category added</h4>
+                </div>
+                <div class="modal-body">
+                    <span class="success"> </span>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+   {% block javascripts %}
+
+       <script>
+           var Forms={
+               Add:{
+                   Self: $('#category-add-form'),
+                   Field:{
+                       CategoryName:$('#category-add-form input[name ="categoryname"]')
+                   },
+                   Bind:function () {
+                       Forms.Add.Self.on('submit',function (e) {
+                           e.preventDefault();
+                           $.post('{{ url('ajax_cat_save') }}',$(this).serialize(),function (result) {
+                               if(result.success)
+                               {
+                                   $('.modal-body .success').text('Category added succesfully!') ;
+                               }else
+                               {
+                                   $('.modal-body .success').text('Category added faild!') ;
+                               }
+                           })
+                       })
+                   }
+               },
+               Bind:function () {
+                   Forms.Add.Bind();
+               }
+           };
+           $(document).ready(function () {
+               Forms.Bind();
+           })
+       </script>
+   {% endblock %}

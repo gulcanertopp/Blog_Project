@@ -1,0 +1,291 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+{% block content %}
+
+    <div class="blogaddheader">
+        <form enctype="multipart/form-data" id="save-post" method="post">
+            <fieldset>
+                <legend>Add Post</legend>
+            <table class="table table-striped add-blog">
+
+                <thead> <tr><th>Add Post </th></tr>
+                </thead>
+                {% if (posts is not null) %}
+
+                    <input name="id" type="hidden" value="{{ posts.ID }}"/>
+                {% else %}
+                <input name="id" type="hidden" value=""/>
+                {% endif %}
+                <tbody>
+                <tr>
+                    <td> <label name="titlelabel"> Title:
+                          </label>
+                         <input class="title" name="title" type="text"  id="title"   {% if posts is not null %} value="{{ posts.Title }}" {% endif %} placeholder="Add Blog" />
+                        <div class="alert alert-danger validation">
+                            <strong>Başlık Girmelisiniz</strong>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <label name="urllabel"> Title:
+                        </label>
+                        <input class="url" name="url" type="text"  id="url"   {% if posts is not null %} value="{{ posts.Slug }}" {% endif %} placeholder="Slug" />
+                        <div class="alert alert-danger validation">
+                            <strong>Link Girmelisiniz</strong>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label name="Date"> BeginDate:
+                        </label>
+                         <input name="begindate" type="date" id="dateinput" {% if posts is not null %} value="{{ posts.BeginDate|date("Y-m-d") }}" {% endif %}  />
+                        <div class="alert alert-danger validation">
+                            <strong>Başlangıç Tarihi Belirlemelisiz</strong>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label name="EndDate"> EndDate:
+                        </label>
+                        <input name="enddate" type="date" id="dateinput" {% if posts is not null %} value="{{ posts.EndDate|date("Y-m-d") }}" {% endif %}  />
+                        <div class="alert alert-danger validation">
+                            <strong>Bitiş Tarihi Belirlemelisiz</strong>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <label name="choose_cat"> Choose the category(s):
+                        </label>
+
+
+                        <select class="select2-multiple" size="3" multiple="multiple">
+                                 <option value="Tec">Technology</option>
+                                 <option value="Mus">Music</option>
+                                 <option value="Cin">Cinema</option>
+                                 <option value="Sec">Security</option>
+                        </select>
+
+
+                </tr>
+                    <td>
+               <tr>
+                   <td>
+                       <input type="hidden" id="post_image"  {% if posts is not null %} value="{{ posts.ImageUrl }}" {% endif %}  >
+                       <div class="alert alert-danger validation">
+                           <strong>Resim Seçmelisiniz</strong>
+                       </div>
+               </tr>
+                    </td>
+
+                <tr>
+                    <td>
+                        <textarea id="desc" name="desc" class="mceEditor">
+
+                             {% if posts is not null %} {{ posts.Description }} {% endif %}
+                        </textarea>
+                        <div class="alert alert-danger" style="width: 90%; margin-left: 12px; display: none">
+                            <strong>Açıklama Girmelisiniz</strong>
+                        </div>
+                        <button id="save-send-button" class="btn btn-primary " type="submit" data-toggle="modal">Save and Send</button>
+                        <button  id="save-send-popup" class="btn btn-primary " style="display: none" type="button" data-toggle="modal" data-target="#myModal"></button>
+                            <div class="modal fade" id="myModal" role="dialog">
+                                <div class="modal-dialog">
+
+
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Post added</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <strong class="text"></strong>
+                                        </div>
+                                        <div class="modal-footer">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                 </tr>
+                    </td>
+
+                </tbody>
+            </table>
+                </fieldset>
+        </form>
+
+    </div>
+
+
+{% endblock %}
+  {% block javascripts %}
+      <script type="text/javascript" src="{{ asset('static/js/uploadImage.js') }}" ></script>
+      <script type="text/javascript">
+          var contentDesc;
+          var postCategories=[];
+          var Forms={
+              Add:{
+                  Self: $('#save-post'),
+                  Fields:{
+                      PostId:$('#save-post input[name ="id"]'),
+                      PostTitle:$('#save-post input[name ="title"]'),
+                      PostUrl:$('#save-post input[name ="url"]'),
+                      PostBeginDate:$('#save-post input[name ="begindate"]'),
+                      PostEndDate:$('#save-post input[name ="enddate"]'),
+                      PostImage:$('#post_image').val(),
+                      PostDescription: null,
+                      PostCategories: postCategories
+                  },
+                  Values          : function(){
+                      return {
+
+                          ID:Forms.Add.Fields.PostId.val(),
+                          title:Forms.Add.Fields.PostTitle.val(),
+                          description: tinymce.get('desc').getContent(),
+                          image_url:$('#post_image').val(),
+                          user_id:{{ app.session.get('id') }},
+                          begin_date:Forms.Add.Fields.PostBeginDate.val(),
+                          end_date:Forms.Add.Fields.PostEndDate.val(),
+                          slug:Forms.Add.Fields.PostUrl.val(),
+                          categories: postCategories
+                      };
+                  },
+                  Bind:function () {
+                      Forms.Add.Self.on('submit',function (e) {
+                          e.preventDefault();
+                          var validation=false;
+                          $('#save-post input').each(function()
+                          {
+                              if( !$(this).val() ) {
+                                  $(this).next().slideDown();
+                                  validation=false;
+                              }else {
+                                  validation = true;
+
+                              }
+                          });
+
+                            if(validation){
+                                $.post('{{ url('ajax_blog_save') }}',Forms.Add.Values(),function (result) {
+                                    console.log(result.success);
+                                    if(result.success)
+                                    {
+                                        $('#save-send-popup').trigger('click');
+                                        $('.modal-body .text').text('Category added succesfully!') ;
+                                    }else
+                                    {
+                                        $('#save-send-popup').trigger('click');
+                                        $('.modal-body .text').text('Category added faild!') ;
+                                    }
+                                })
+                            }
+
+
+                      })
+                  }
+              },
+              Bind:function () {
+                  Forms.Add.Bind();
+              }
+          };
+          $('#post_image').uploadableImage({
+              url         : '{{ path('admin_media_save_easy') }}',
+              description : ' ',
+              errors      : {
+                  limitMultiFileUploads : 'blog'
+              },
+              s : 0.20
+          });
+          $(document).ready(function () {
+
+              function convertToSlug(Text)
+              {
+                  return Text
+                          .toLowerCase()
+                          .replace(/[^\w ]+/g,'')
+                          .replace(/ +/g,'-')
+                          ;
+              }
+
+              Forms.Add.Fields.PostTitle.keyup(function() {
+                  var title = $(this).val();
+                  var slug = convertToSlug(title);
+                  Forms.Add.Fields.PostUrl.val(slug);
+
+              });
+
+              $(".select2-multiple").select2({
+                  minimumInputLength: 3,
+                  multiple: true,
+                  allowClear: true,
+                  data: function(){
+                      return {results: selections}
+                  },
+
+                  ajax: {
+                      url: '{{ url('ajax_select2_search') }}',
+                      dataType: 'json',
+                      delay: 250,
+                      data: function (params) {
+                          return {
+                              q: params.term // search term
+                          };
+                      },
+                      processResults: function (data, params) {
+                          return {
+                              results:data.results
+                          };
+                      },
+                      cache: true
+                  }
+              });
+
+
+              $('.select2-multiple').on("change", function() {
+                  var selectData = $('.select2-multiple').select2('data');
+                  postCategories = [];
+                  $.each(selectData,function (key,value) {
+                      postCategories.push({
+                          'ID':value.id,
+                          'category_name':value.text
+                      })
+
+                  })
+
+              });
+
+              tinymce.init({
+                  selector: 'textarea',
+                  mode : "specific_textareas",
+                  editor_selector : "mceEditor",
+                  height: 400,
+                  plugins: [
+                      'advlist autolink lists link image charmap print preview anchor',
+                      'searchreplace visualblocks code fullscreen',
+                      'insertdatetime media table contextmenu paste code'
+                  ],
+                  setup: function(editor) {
+                      editor.on('change', function (e) {
+                          contentDesc=tinymce.get('desc').getContent();
+                      });
+                  },
+                  toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+
+              });
+
+              Forms.Bind();
+          })
+
+
+
+      </script>
+  {% endblock %}

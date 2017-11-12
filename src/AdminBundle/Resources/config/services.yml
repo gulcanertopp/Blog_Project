@@ -1,0 +1,28 @@
+services:
+#    admin.example:
+#        class: AdminBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+
+    admin.base_controller:
+        class: AdminBundle\Controller\BaseController
+        abstract: true
+        calls:
+            - [ Initialize, ["@session"] ]
+
+    admin.default_controller:
+        class: AdminBundle\Controller\DefaultController
+        arguments: ["@app.user_repository"]
+        parent: "admin.base_controller"
+
+    admin.category_controller:
+        class: AdminBundle\Controller\CategoryController
+        arguments: ["@app.category_repository"]
+        parent: "admin.base_controller"
+
+    admin.post_controller:
+        class: AdminBundle\Controller\PostController
+        arguments: ["@app.post_repository"]
+        parent: "admin.base_controller"
+
+
+
